@@ -5,6 +5,7 @@ from tortoise import Tortoise
 from dotenv import load_dotenv
 
 from dto.input_event_dto import InputEventDto
+from dto.output_event_dto import OutputEventDto
 from model.event_entity import EventEntity
 
 
@@ -16,6 +17,10 @@ async def init():
         modules={'models': ['model.event_entity']}
     )
     await Tortoise.generate_schemas()
+    mapping_config()
+
+
+def mapping_config():
     mapper.add(InputEventDto,
                EventEntity,
                fields_mapping={
@@ -26,4 +31,17 @@ async def init():
                    "event_type": "InputEventDto.type",
                    "description": "InputEventDto.description",
                    "details": "InputEventDto.event_details"
+               })
+    mapper.add(EventEntity,
+               OutputEventDto,
+               fields_mapping={
+                   "id_issue": "EventEntity.event_id",
+                   "created": "EventEntity.created",
+                   "updated": "EventEntity.updated",
+                   "status": "EventEntity.status",
+                   "severity": "EventEntity.severity",
+                   "tool": "EventEntity.tool",
+                   "type": "EventEntity.event_type",
+                   "description": "EventEntity.description",
+                   "event_details": "EventEntity.details"
                })
